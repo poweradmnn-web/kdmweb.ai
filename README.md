@@ -73,19 +73,22 @@ Variables*, then redeploy. `.env.local` is gitignored — never commit real keys
 
 ## Book a call
 
-Scheduling lives in `src/config/brand.ts` under `booking`:
+The scheduler reads from `NEXT_PUBLIC_BOOKING_URL` (recommended for production — set it in Vercel)
+and falls back to the value in `src/config/brand.ts` for local dev:
 
 ```ts
 booking: {
-  provider: "calcom",   // "calcom" (recommended) or "calendly" — one-line switch
-  url: "",              // paste your link, e.g. "https://cal.com/your-name/intro"
+  // also overridable via NEXT_PUBLIC_BOOKING_PROVIDER
+  provider: (process.env.NEXT_PUBLIC_BOOKING_PROVIDER ?? "calcom"),  // "calcom" or "calendly"
+  url: process.env.NEXT_PUBLIC_BOOKING_URL || "",  // e.g. "https://cal.com/your-name/intro"
 }
 ```
 
-Paste your link and **every "Book a free call" button opens the scheduler** (Cal.com modal /
-Calendly popup), plus an **embedded calendar appears in the Contact section**. Until `url` is set,
-those buttons gracefully smooth-scroll to the contact form. Get a free link at https://cal.com
-or https://calendly.com.
+Once set, **every "Book a free call" button opens the scheduler** (Cal.com modal / Calendly popup)
+and an **embedded calendar appears in the Contact section**. Until it's set, those buttons
+gracefully smooth-scroll to the contact form. Note: `NEXT_PUBLIC_*` values are baked in at build
+time, so after changing it in Vercel you must **redeploy**. Get a free link at https://cal.com or
+https://calendly.com.
 
 ## Still to add
 
